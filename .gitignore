@@ -1,0 +1,44 @@
+# Compiled binary files
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Output files
+*.out
+*.test
+
+# Go specific
+*.o
+*.a
+*.test
+*.prof
+
+# Dependency directories
+/bin/
+/pkg/
+/vendor/
+/Godeps/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*.swo
+*.tmproj
+
+# Test binary, build, and coverage directories
+/_test/
+/build/
+/cover/
+
+# System-specific files
+.DS_Store
+Thumbs.db
