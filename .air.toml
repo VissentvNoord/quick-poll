@@ -1,0 +1,8 @@
+# .air.toml
+
+[build]
+cmd = "go"
+args = ["run", "."]
+
+[[watcher]]
+path = "./..."  # Watch all files in the project root
