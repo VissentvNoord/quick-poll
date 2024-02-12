@@ -3,14 +3,64 @@ package poll
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"math/rand"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/gorilla/websocket"
 )
 
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
+}
+
 var polls []Poll
+
+func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer conn.Close()
+
+	for {
+		messageType, p, err := conn.ReadMessage()
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		// Assuming you're receiving an integer
+		if messageType == websocket.TextMessage {
+			// Convert the received data (string) to an integer
+			data, err := strconv.Atoi(string(p))
+			if err != nil {
+				fmt.Println("Failed to convert to integer:", err)
+				return
+			}
+			// Handle the integer received from the client
+			fmt.Println(data)
+		}
+	}
+}
+
+func DebugRequestBody(w http.ResponseWriter, r *http.Request) {
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Error reading request body", http.StatusInternalServerError)
+		return
+	}
+
+	fmt.Println("Raw Request:", string(body))
+}
 
 func CreatePoll(w http.ResponseWriter, r *http.Request) {
 	var requestBody PollRequest
@@ -78,7 +128,14 @@ func UserSubmission(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	SubmitOption(requestBody.Submission, &poll)
+	pollOption, err := SubmitOption(requestBody.Submission, &poll)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(pollOption)
 }
 
 func generatePollID() string {

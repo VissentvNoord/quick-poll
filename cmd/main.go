@@ -11,7 +11,7 @@ import (
 func main() {
 	r := mux.NewRouter()
 
-	// Register routes
+	r.HandleFunc("/ws", poll.HandleWebSocket)
 	r.HandleFunc("/new", poll.CreatePoll).Methods("POST")
 	r.HandleFunc("/{id}", poll.GetPoll).Methods("GET")
 	r.HandleFunc("/{id}/submit", poll.UserSubmission).Methods("POST")

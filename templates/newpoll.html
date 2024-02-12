@@ -1,0 +1,27 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Poll</title>
+</head>
+<body>
+    <h1>New poll</h1>
+    <button id="new-opt">New option</button>
+    <form action="/new" method="post" style="display: grid; gap: 10px; max-width: 1000px;">
+        <input type="text" name="title" placeholder="Title/question">
+
+        <div id="poll-options" style="display: grid; gap: 10px;">
+            <input type="text" placeholder="type option here" name="options">
+        </div>
+
+        <input type="submit" value="Create new poll">
+        <div>
+            <h1>
+test
+            </h1>
+        </div>
+    </form>
+
+    <script src="/public/js/newpoll.js"></script>
+</body>
+</html>
